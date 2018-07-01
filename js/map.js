@@ -7,82 +7,64 @@ var checkoutsList = ['12:00', '13:00', '14:00'];
 var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
-var random = function (min, max) {
+var createRandom = function (min, max) {
   var randomNumber = Math.round(Math.random() * (max - min) + min);
   return randomNumber;
 };
 
-var cloneArr = function (copyArr, arr) {
-  for (var k = 0; k < arr.length; k++) {
-    copyArr[k] = arr[k];
+var generateArr = function (arr) {
+  var copy = arr.slice(0); // скопировала массив
+  var newArr = [];
+
+  for (var j = 0; j < arr.length; j++) {
+    var randomNum = createRandom(0, copy.length - 1);
+    newArr[j] = copy[randomNum];
+    copy.splice(randomNum, 1);
   }
-  return copyArr;
+  return newArr;
 };
+
+var randomArrQuantity = function (arr) {
+  var newArr = generateArr(arr).slice(0, createRandom(1, arr.length));
+  return newArr;
+};
+
+// var coordinateX = createRandom(20, document.body.clientWidth - 20);
+// var coordinateY = createRandom(170, 630);
 
 var makeElement = function () {
   var adsList = [];
 
   for (var i = 0; i < 8; i++) {
-    var adElement = {};
-
-    adElement.author = {};
-    adElement.author.avatar = 'img/avatars/user0' + (i + 1) + '.png';
-
-    adElement.offer = {};
-    var elementOffer = adElement.offer;
-
-    elementOffer.title = titlesList[i];
-
-    elementOffer.address = random(1, 1000) + ', ' + random(1, 1000);
-
-    elementOffer.price = random(1000, 1000000);
-
-    elementOffer.type = typesList[random(0, typesList.length - 1)];
-
-    elementOffer.rooms = random(1, 5);
-
-    elementOffer.guests = random(0, 100);
-
-    elementOffer.checkin = checkinsList[random(0, checkinsList.length - 1)];
-
-    elementOffer.checkout = checkoutsList[random(0, checkoutsList.length - 1)];
-
-    var featuresQuantity = random(1, featuresList.length);
-
-    elementOffer.features = [];
-
-    var featuresCopy = [];
-    featuresCopy = cloneArr(featuresCopy, featuresList);
-
-    for (var j = 0; j < featuresQuantity - 1; j++) {
-      var randomFeature = random(0, featuresCopy.length - 1);
-      elementOffer.features[j] = featuresCopy[randomFeature];
-      featuresCopy.splice(randomFeature, 1);
-    }
-
-    elementOffer.description = '';
-
-    elementOffer.photos = [];
-
-    var photosListCopy = [];
-    photosListCopy = cloneArr(photosListCopy, photosList);
-
-    var photosQuantity = photosListCopy.length;
-
-    for (var k = 0; k < photosQuantity; k++) {
-      var randomPhoto = random(0, photosListCopy.length - 1);
-      elementOffer.photos[k] = photosListCopy[randomPhoto];
-      photosListCopy.splice(randomPhoto, 1);
-    }
-
-    adElement.location = {};
-    adElement.location.x = random(20, document.body.clientWidth - 20);
-    adElement.location.y = random(170, 630);
-
+    var coordinateX = createRandom(300, 900);
+    var coordinateY = createRandom(170, 630);
+    var adElement = {
+      author: {
+        avatar: 'img/avatars/user0' + (i + 1) + '.png'
+      },
+      offer: {
+        title: titlesList[i],
+        address: coordinateX + ', ' + coordinateY,
+        price: createRandom(1000, 1000000),
+        type: typesList[createRandom(0, typesList.length - 1)],
+        rooms: createRandom(1, 5),
+        guests: createRandom(0, 100),
+        checkin: checkinsList[createRandom(0, checkinsList.length - 1)],
+        checkout: checkoutsList[createRandom(0, checkoutsList.length - 1)],
+        features: randomArrQuantity(featuresList),
+        description: '',
+        photos: generateArr(photosList)
+      },
+      location: {
+        x: coordinateX,
+        y: coordinateY
+      }
+    };
     adsList.push(adElement);
   }
   return adsList;
 };
+
 var newList = makeElement();
 
 // ------------------------------ второе задание ----------------------------------
@@ -93,14 +75,15 @@ map.classList.remove('map--faded');
 // ----------------------------- третье задание -------------------------------------
 // var template = document.querySelector('template');
 var pin = document.querySelector('.map__pin');
-var createPin = function (locationX, locationY, avatar, title) {
+
+var createPin = function (arr) {
   var pinClone = pin.cloneNode(true);
 
-  pinClone.style = 'left: ' + (locationX - 25) + 'px; top: ' + (locationY - 70) + 'px;';
+  pinClone.style = 'left: ' + (arr.location.x - 25) + 'px; top: ' + (arr.location.y - 70) + 'px;';
 
   var img = pinClone.querySelector('img');
-  img.src = avatar;
-  img.textContent = title;
+  img.src = arr.author.avatar;
+  img.textContent = arr.offer.title;
 
   return pinClone;
 };
@@ -113,7 +96,7 @@ var fragment = document.createDocumentFragment();
 
 var makePins = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    var newPin = createPin(arr[i].location.x, arr[i].location.y, arr[i].author.avatar, arr[i].offer.title);
+    var newPin = createPin(arr[i]);
     fragment.appendChild(newPin);
   }
   pinsPlace.appendChild(fragment);
