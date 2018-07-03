@@ -7,13 +7,14 @@ var checkoutsList = ['12:00', '13:00', '14:00'];
 var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var photosList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+
 var createRandom = function (min, max) {
   var randomNumber = Math.round(Math.random() * (max - min) + min);
   return randomNumber;
 };
 
 var generateArr = function (arr) {
-  var copy = arr.slice(0); // скопировала массив
+  var copy = arr.slice(0);
   var newArr = [];
 
   for (var j = 0; j < arr.length; j++) {
@@ -28,9 +29,6 @@ var randomArrQuantity = function (arr) {
   var newArr = generateArr(arr).slice(0, createRandom(1, arr.length));
   return newArr;
 };
-
-// var coordinateX = createRandom(20, document.body.clientWidth - 20);
-// var coordinateY = createRandom(170, 630);
 
 var makeElement = function () {
   var adsList = [];
@@ -65,15 +63,9 @@ var makeElement = function () {
   return adsList;
 };
 
+
 var newList = makeElement();
 
-// ------------------------------ второе задание ----------------------------------
-
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-
-// ----------------------------- третье задание -------------------------------------
-// var template = document.querySelector('template');
 var pin = document.querySelector('.map__pin');
 
 var createPin = function (arr) {
@@ -84,12 +76,12 @@ var createPin = function (arr) {
   var img = pinClone.querySelector('img');
   img.src = arr.author.avatar;
   img.textContent = arr.offer.title;
+  pinClone.classList.add('map__pin--clone');
+  img.classList.add('map__pin--clone');
 
   return pinClone;
 };
 
-
-// ------------------------------- четвертое задание ---------------------------------
 
 var pinsPlace = document.querySelector('.map__pins');
 var fragment = document.createDocumentFragment();
@@ -101,9 +93,7 @@ var makePins = function (arr) {
   }
   pinsPlace.appendChild(fragment);
 };
-makePins(newList);
 
-// ------------------------------------ пятое задание ------------------------------------
 var translation = {
   'flat': 'Квартира',
   'bungalo': 'Бунгало',
@@ -140,6 +130,32 @@ var fillPin = function (arr, key) {
   return cardCopy;
 };
 
-var newCard = fillPin(newList, 0);
+// ---------------------- module4-task1 ---------------------------
+var map = document.querySelector('.map');
 var mapContainer = map.querySelector('.map__filters-container');
-map.insertBefore(newCard, mapContainer);
+var mainPin = map.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var addressInput = document.querySelector('#address');
+var PIN_WIDTH = 65;
+var PIN_HEIGHT = 65;
+var PIN_TAIL = 22;
+
+addressInput.value = '' + (parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2)) + ', ' + (parseInt(mainPin.style.top, 10) + (PIN_HEIGHT / 2));
+
+mainPin.addEventListener('mouseup', function () {
+  map.classList.remove('map--faded');
+  makePins(newList);
+  adForm.classList.remove('ad-form--disabled');
+  var coordX = parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2);
+  var coordY = parseInt(mainPin.style.top, 10) + PIN_HEIGHT + PIN_TAIL;
+  addressInput.value = '' + coordX + ', ' + coordY;
+});
+
+pinsPlace.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('map__pin--clone')) {
+    var newCard = fillPin(newList, 0);
+    map.insertBefore(newCard, mapContainer);
+  }
+});
+
+
