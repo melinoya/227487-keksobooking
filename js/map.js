@@ -173,10 +173,10 @@ var roomNumber = document.querySelector('#room_number');
 var guests = document.querySelector('#capacity');
 var reset = document.querySelector('.ad-form__reset');
 var dependenceGuests = {
-  1: [2],
-  2: [1, 2],
-  3: [0, 1, 2],
-  100: [3]
+  1: [3],
+  2: [2, 3],
+  3: [1, 2, 3],
+  100: [4]
 };
 
 var testedValue = function (select, value) {
@@ -206,20 +206,19 @@ timeOut.addEventListener('click', function () {
   timeIn.options[testedValue(timeIn, selectedTime)].selected = true;
 });
 
+guests.setCustomValidity('Введено неверное количество гостей');
 roomNumber.addEventListener('click', function () {
   var selectedRoom = roomNumber.options[roomNumber.selectedIndex].value;
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 5; i++) {
     guests.options[i].disabled = true;
   }
-
+  guests.setCustomValidity('');
   var selectedValues = dependenceGuests[selectedRoom];
   for (var j = 0; j < selectedValues.length; j++) {
     var k = selectedValues[j];
     guests.options[k].disabled = false;
   }
 });
-
-guests.setCustomValidity('Введено неверное количество гостей');
 
 reset.addEventListener('click', function () {
   var pinClones = pinsPlace.querySelectorAll('.map__pin--clone');

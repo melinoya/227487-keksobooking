@@ -146,8 +146,9 @@
 
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="room_number">Кол-во комнат</label>
-          <select id="room_number" name="rooms">
-            <option value="1" selected>1 комната</option>
+          <select id="room_number" name="rooms" required>
+            <option disabled selected>Выберите кол-во комнат</option>
+            <option value="1">1 комната</option>
             <option value="2">2 комнаты</option>
             <option value="3">3 комнаты</option>
             <option value="100">100 комнат</option>
@@ -156,10 +157,11 @@
 
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="capacity">Количество мест</label>
-          <select id="capacity" name="capacity">
+          <select id="capacity" name="capacity" required>
+            <option disabled selected>Выберите кол-во гостей</option>
             <option value="3">для 3 гостей</option>
             <option value="2">для 2 гостей</option>
-            <option value="1" selected>для 1 гостя</option>
+            <option value="1">для 1 гостя</option>
             <option value="0">не для гостей</option>
           </select>
         </fieldset>
