@@ -218,11 +218,15 @@ roomNumber.addEventListener('click', function () {
   }
 });
 
+guests.setCustomValidity('Введено неверное количество гостей');
+
 reset.addEventListener('click', function () {
   var pinClones = pinsPlace.querySelectorAll('.map__pin--clone');
   for (var i = 0; i < pinClones.length; i++) {
     pinClones[i].remove();
   }
-  document.querySelector('.map__card').remove();
   map.classList.add('map--faded');
+  document.querySelector('.map__card').remove();
 });
+
+
