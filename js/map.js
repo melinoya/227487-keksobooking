@@ -189,11 +189,12 @@ var testedValue = function (select, value) {
   return i;
 };
 
-housingTypeSelect.addEventListener('ckick', function () {
+housingTypeSelect.addEventListener('click', function () {
   var selected = housingTypeSelect.options[housingTypeSelect.selectedIndex].value;
   price.min = dependencePrice[selected];
   price.placeholder = dependencePrice[selected];
 });
+
 
 timeIn.addEventListener('click', function () {
   var selectedTime = timeIn.options[timeIn.selectedIndex].value;
