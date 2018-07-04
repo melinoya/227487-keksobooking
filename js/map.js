@@ -228,5 +228,3 @@ reset.addEventListener('click', function () {
   map.classList.add('map--faded');
   document.querySelector('.map__card').remove();
 });
-
-
