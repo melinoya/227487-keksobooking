@@ -34,8 +34,8 @@ var makeElement = function () {
   var adsList = [];
 
   for (var i = 0; i < 8; i++) {
-    var coordinateX = createRandom(300, 900);
-    var coordinateY = createRandom(170, 630);
+    var coordinateX = createRandom(20, 1180);
+    var coordinateY = createRandom(130, 630);
     var adElement = {
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
@@ -130,25 +130,86 @@ var fillPin = function (arr, key) {
   return cardCopy;
 };
 
-// ---------------------- module4-task1 ---------------------------
+// ---------------------- module5-task1 ---------------------------
 var map = document.querySelector('.map');
 var mapContainer = map.querySelector('.map__filters-container');
 var mainPin = map.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
 var addressInput = document.querySelector('#address');
-var PIN_WIDTH = 65;
-var PIN_HEIGHT = 65;
-var PIN_TAIL = 22;
+var PIN_WIDTH = 64;
+var PIN_HEIGHT = 64;
+var PIN_TAIL = 20;
+var MIN_X = 0;
+var MAX_X = 1135;
+var MIN_Y = 80;
+var MAX_Y = 630;
 
-addressInput.value = '' + (parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2)) + ', ' + (parseInt(mainPin.style.top, 10) + (PIN_HEIGHT / 2));
+var calcAddressValue = function (height) {
+  var addressValue = '' + (parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2)) + ', ' + (parseInt(mainPin.style.top, 10) + height);
+  return addressValue;
+};
 
-mainPin.addEventListener('mouseup', function () {
+addressInput.value = calcAddressValue((PIN_HEIGHT / 2));
+
+
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoord = {
+    x: parseInt(mainPin.style.left, 10) + PIN_WIDTH,
+    y: parseInt(mainPin.style.top, 10) + (PIN_HEIGHT / 2)
+  };
+
+  addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+
+  var onMouseMove = function (evtMove) {
+    evtMove.preventDefault();
+
+    var shift = {
+      x: startCoord.x - evtMove.clientX,
+      y: startCoord.y - evtMove.clientY
+    };
+
+    startCoord = {
+      x: evtMove.clientX,
+      y: evtMove.clientY
+    };
+
+    mainPin.style.left = parseInt(mainPin.style.left, 10) - shift.x + 'px';
+    mainPin.style.top = parseInt(mainPin.style.top, 10) - shift.y + 'px';
+    addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+
+    if (parseInt(mainPin.style.left, 10) < MIN_X) {
+      mainPin.style.left = MIN_X + 'px';
+    } else if (parseInt(mainPin.style.left, 10) > MAX_X) {
+      mainPin.style.left = MAX_X + 'px';
+    }
+
+    if (parseInt(mainPin.style.top, 10) < MIN_Y) {
+      mainPin.style.top = MIN_Y + 'px';
+    } else if (parseInt(mainPin.style.top, 10) > MAX_Y) {
+      mainPin.style.top = MAX_Y + 'px';
+    }
+
+  };
+
+  var onMouseUp = function (evtUp) {
+    evtUp.preventDefault();
+
+    addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
+mainPin.addEventListener('click', function () {
   map.classList.remove('map--faded');
   makePins(newList);
   adForm.classList.remove('ad-form--disabled');
-  var coordX = parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2);
-  var coordY = parseInt(mainPin.style.top, 10) + PIN_HEIGHT + PIN_TAIL;
-  addressInput.value = '' + coordX + ', ' + coordY;
 });
 
 pinsPlace.addEventListener('click', function (evt) {
