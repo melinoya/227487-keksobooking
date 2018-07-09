@@ -1,4 +1,5 @@
 'use strict';
+
 var PIN_WIDTH = 64;
 var PIN_HEIGHT = 64;
 var PIN_TAIL = 20;
@@ -23,59 +24,59 @@ var makePins = function (arr) {
   pinsPlace.appendChild(fragment);
 };
 
+var setBorders = function (min, max, current) {
+  if (current < min) {
+    var value = min + 'px';
+  } else if (current > max) {
+    value = max + 'px';
+  }
+  return value;
+};
+
 var calcAddressValue = function (height) {
-  var addressValue = parseInt(mainPin.style.left, 10) + (PIN_WIDTH * 2) + ', ' + (parseInt(mainPin.style.top, 10) + height);
+  var addressValue = parseInt(mainPin.style.left, 10) + ', ' + (parseInt(mainPin.style.top, 10) + height);
   return addressValue;
 };
 
-addressInput.value = calcAddressValue((PIN_HEIGHT / 2));
+addressInput.value = calcAddressValue(PIN_HEIGHT / 2);
 
 
 mainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
   var startCoord = {
-    x: parseInt(mainPin.style.left, 10) + PIN_WIDTH,
+    x: parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2),
     y: parseInt(mainPin.style.top, 10) + (PIN_HEIGHT / 2)
   };
 
-  addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+  addressInput.value = calcAddressValue(PIN_HEIGHT + PIN_TAIL);
 
   var onMouseMove = function (evtMove) {
     evtMove.preventDefault();
 
     var shift = {
-      x: startCoord.x - evtMove.clientX,
+      x: startCoord.x - (evtMove.clientX - map.offsetLeft),
       y: startCoord.y - evtMove.clientY
     };
 
     startCoord = {
-      x: evtMove.clientX,
+      x: evtMove.clientX - map.offsetLeft,
       y: evtMove.clientY
     };
 
     mainPin.style.left = parseInt(mainPin.style.left, 10) - shift.x + 'px';
     mainPin.style.top = parseInt(mainPin.style.top, 10) - shift.y + 'px';
-    addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+    addressInput.value = calcAddressValue(PIN_HEIGHT + PIN_TAIL);
 
-    if (parseInt(mainPin.style.left, 10) < MIN_X) {
-      mainPin.style.left = MIN_X + 'px';
-    } else if (parseInt(mainPin.style.left, 10) > MAX_X) {
-      mainPin.style.left = MAX_X + 'px';
-    }
+    mainPin.style.left = setBorders(MIN_X, MAX_X, parseInt(mainPin.style.left, 10));
 
-    if (parseInt(mainPin.style.top, 10) < MIN_Y) {
-      mainPin.style.top = MIN_Y + 'px';
-    } else if (parseInt(mainPin.style.top, 10) > MAX_Y) {
-      mainPin.style.top = MAX_Y + 'px';
-    }
-
+    mainPin.style.top = setBorders(MIN_Y, MAX_Y, parseInt(mainPin.style.top, 10));
   };
 
   var onMouseUp = function (evtUp) {
     evtUp.preventDefault();
 
-    addressInput.value = calcAddressValue((PIN_HEIGHT + PIN_TAIL));
+    addressInput.value = calcAddressValue(PIN_HEIGHT + PIN_TAIL);
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
