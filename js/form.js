@@ -2,6 +2,7 @@
 
 (function () {
   var map = document.querySelector('.map');
+
   var pinsPlace = document.querySelector('.map__pins');
   var price = document.querySelector('#price');
   var housingTypeSelect = document.querySelector('#type');
@@ -71,5 +72,19 @@
     }
     map.classList.add('map--faded');
     document.querySelector('.map__card').remove();
+  });
+
+  var showError = function (error) {
+    document.querySelector('.error-popup').classList.remove('hidden');
+    document.querySelector('.error-popup__fill').innerHTML = error;
+  };
+
+  var form = document.querySelector('.map__filters');
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.save('https://js.dump.academy/keksobooking', new FormData(form), function () {
+      map.classList.add('map--faded');
+    }, showError);
+    evt.preventDefault();
   });
 })();
