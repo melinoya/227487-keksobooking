@@ -15,7 +15,6 @@
   var addressInput = document.querySelector('#address');
   var pinsPlace = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
-  // var newList = window.makeElement();
 
   var makePins = function (arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -23,11 +22,6 @@
       fragment.appendChild(newPin);
     }
     pinsPlace.appendChild(fragment);
-  };
-
-  var showError = function (error) {
-    document.querySelector('.error-popup').classList.remove('hidden');
-    document.querySelector('.error-popup__fill').innerHTML = error;
   };
 
   var setBorders = function (min, max, current) {
@@ -93,14 +87,14 @@
   });
 
   mainPin.addEventListener('click', function () {
-    window.backend.load('https://js.dump.academy/keksobooking/data', makePins, showError);
+    window.backend.load('https://js.dump.academy/keksobooking/data', makePins, window.showError);
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
   });
 
   pinsPlace.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('map__pin--clone')) {
-      var newCard = window.backend.load('https://js.dump.academy/keksobooking/data', window.fillPin, showError);
+      var newCard = window.backend.load('https://js.dump.academy/keksobooking/data', window.fillPin, window.showError);
       map.insertBefore(newCard, mapContainer);
     }
   });

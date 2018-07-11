@@ -74,17 +74,23 @@
     document.querySelector('.map__card').remove();
   });
 
-  var showError = function (error) {
-    document.querySelector('.error-popup').classList.remove('hidden');
-    document.querySelector('.error-popup__fill').innerHTML = error;
-  };
-
-  var form = document.querySelector('.map__filters');
+  var form = document.querySelector('.ad-form');
 
   form.addEventListener('submit', function (evt) {
     window.backend.save('https://js.dump.academy/keksobooking', new FormData(form), function () {
-      map.classList.add('map--faded');
-    }, showError);
+      form.querySelector('#title').value = '';
+      form.querySelector('#price').value = '';
+      form.querySelector('#description').value = '';
+      housingTypeSelect.options[0].selected = true;
+      timeOut.options[0].selected = true;
+      timeIn.options[0].selected = true;
+      roomNumber.options[0].disabled = false;
+      guests.options[0].disabled = false;
+      roomNumber.options[0].selected = true;
+      guests.options[0].selected = true;
+      roomNumber.options[0].disabled = true;
+      guests.options[0].disabled = true;
+    }, window.showError);
     evt.preventDefault();
   });
 })();
