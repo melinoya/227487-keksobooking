@@ -10,7 +10,9 @@
   var timeOut = document.querySelector('#timeout');
   var roomNumber = document.querySelector('#room_number');
   var guests = document.querySelector('#capacity');
+  var form = document.querySelector('.ad-form');
   var reset = document.querySelector('.ad-form__reset');
+  var success = document.querySelector('.success');
   var dependencePrice = {
     'bungalo': 0,
     'flat': 1000,
@@ -34,13 +36,14 @@
     return i;
   };
 
+  // ----------------- Зависимость цены от типа жилья -----------------
   housingTypeSelect.addEventListener('click', function () {
     var selected = housingTypeSelect.options[housingTypeSelect.selectedIndex].value;
     price.min = dependencePrice[selected];
     price.placeholder = dependencePrice[selected];
   });
 
-
+  // ----------------- Время заезда и выезда - зависимость --------------
   timeIn.addEventListener('click', function () {
     var selectedTime = timeIn.options[timeIn.selectedIndex].value;
     timeOut.options[testedValue(timeOut, selectedTime)].selected = true;
@@ -51,6 +54,7 @@
     timeIn.options[testedValue(timeIn, selectedTime)].selected = true;
   });
 
+  // ----------------- Зависимость кол-ва гостей от кол-ва комнат -------
   guests.setCustomValidity('Введено неверное количество гостей');
   roomNumber.addEventListener('click', function () {
     var selectedRoom = roomNumber.options[roomNumber.selectedIndex].value;
@@ -65,19 +69,34 @@
     }
   });
 
-  reset.addEventListener('click', function () {
+  // ------------------------ Сброс формы при нажатии на кнопку Reset -------
+  var resetAll = function () {
     var pinClones = pinsPlace.querySelectorAll('.map__pin--clone');
     for (var i = 0; i < pinClones.length; i++) {
       pinClones[i].remove();
     }
     map.classList.add('map--faded');
-    document.querySelector('.map__card').remove();
-  });
 
-  var form = document.querySelector('.ad-form');
+    if (map.querySelector('.map__card')) {
+      map.querySelector('.map__card');
+    }
+  };
+
+  reset.addEventListener('click', resetAll);
+
+  // --------- Сброс формы на дефолтные значения при удачной
+  //  отправке формы --------------------
+  var closeSuccess = function (evtDown) {
+    window.util.isEscEvent(evtDown, function () {
+      success.classList.add('hidden');
+      document.removeEventListener('keydown', closeSuccess);
+    });
+  };
 
   form.addEventListener('submit', function (evt) {
     window.backend.save('https://js.dump.academy/keksobooking', new FormData(form), function () {
+      success.classList.remove('hidden');
+      resetAll();
       form.querySelector('#title').value = '';
       form.querySelector('#price').value = '';
       form.querySelector('#description').value = '';
@@ -90,6 +109,8 @@
       guests.options[0].selected = true;
       roomNumber.options[0].disabled = true;
       guests.options[0].disabled = true;
+
+      document.addEventListener('keydown', closeSuccess);
     }, window.showError);
     evt.preventDefault();
   });
