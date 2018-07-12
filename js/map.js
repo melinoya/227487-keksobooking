@@ -92,10 +92,24 @@
     adForm.classList.remove('ad-form--disabled');
   });
 
+
+  var onRequestCard = function (arr) {
+    var newCard = window.fillPin(arr);
+    var close = newCard.querySelector('.popup__close');
+    map.insertBefore(newCard, mapContainer);
+
+    var cardHere = map.querySelector('.map__card');
+    if (map.querySelectorAll('.map__card').length > 1) {
+      cardHere.remove();
+    }
+    close.addEventListener('click', function () {
+      cardHere.remove();
+    });
+  };
+
   pinsPlace.addEventListener('click', function (evt) {
     if (evt.target.classList.contains('map__pin--clone')) {
-      var newCard = window.backend.load('https://js.dump.academy/keksobooking/data', window.fillPin, window.showError);
-      map.insertBefore(newCard, mapContainer);
+      window.backend.load('https://js.dump.academy/keksobooking/data', onRequestCard, window.showError);
     }
   });
 })();
