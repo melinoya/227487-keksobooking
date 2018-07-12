@@ -118,8 +118,9 @@
     if (map.querySelectorAll('.map__card').length > 1) {
       cardHere.remove();
     }
+    console.log(map);
     close.addEventListener('click', function () {
-      cardHere.remove();
+      map.querySelector('.map__card').remove();
     });
   };
 
