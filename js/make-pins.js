@@ -7,6 +7,9 @@
   window.makePins = function (arr) {
     for (var i = 0; i < arr.length; i++) {
       var newPin = window.createPin(arr[i]);
+      newPin.addEventListener('click', function () {
+        window.onRequestCard(arr[i]);
+      });
       fragment.appendChild(newPin);
     }
     pinsPlace.appendChild(fragment);

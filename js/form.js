@@ -2,7 +2,6 @@
 
 (function () {
   var map = document.querySelector('.map');
-
   var pinsPlace = document.querySelector('.map__pins');
   var price = document.querySelector('#price');
   var housingTypeSelect = document.querySelector('#type');
