@@ -5,14 +5,14 @@
   var fragment = document.createDocumentFragment();
 
   window.makePins = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      var newPin = window.createPin(arr[i]);
+    arr.forEach(function (data) {
+      var newPin = window.createPin(data);
       newPin.addEventListener('click', function () {
-        window.onRequestCard(arr[i]);
+        window.onRequestCard(data);
         newPin.classList.add('map__pin--active');
       });
       fragment.appendChild(newPin);
-    }
+    });
     pinsPlace.appendChild(fragment);
   };
 })();
