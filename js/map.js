@@ -9,21 +9,12 @@
   var MIN_Y = 80;
   var MAX_Y = 630;
   var map = document.querySelector('.map');
-  var mapContainer = map.querySelector('.map__filters-container');
+  var mapFilters = map.querySelector('.map__filters');
   var mainPin = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var addressInput = document.querySelector('#address');
   var pinsPlace = document.querySelector('.map__pins');
-  var fragment = document.createDocumentFragment();
 
-  // ----- Создание меток на карте ----------
-  var makePins = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      var newPin = window.createPin(arr[i]);
-      fragment.appendChild(newPin);
-    }
-    pinsPlace.appendChild(fragment);
-  };
 
   // ---- Установка границ на карте для метки --------
   var setBorders = function (min, max, current) {
@@ -45,9 +36,12 @@
 
   // ---- Нажатие на метку для активации карты
   mainPin.addEventListener('click', function () {
-    window.backend.load('https://js.dump.academy/keksobooking/data', makePins, window.showError);
+    window.backend.load('https://js.dump.academy/keksobooking/data', window.makePins, window.showError);
+
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
+
+
   });
 
   // ---- Взаимодействие с меткой на карте после нажатия на нее ---------
@@ -109,24 +103,22 @@
   });
 
   // ---- Создание карточки с описанием -----
-  var onRequestCard = function (arr) {
-    var newCard = window.fillPin(arr);
-    var close = newCard.querySelector('.popup__close');
-    map.insertBefore(newCard, mapContainer);
 
-    var cardHere = map.querySelector('.map__card');
-    if (map.querySelectorAll('.map__card').length > 1) {
-      cardHere.remove();
-    }
-    close.addEventListener('click', function () {
-      map.querySelector('.map__card').remove();
-    });
-  };
 
   // ----- Вызов карточки с описанием при нажатии на метку ------
-  pinsPlace.addEventListener('click', function (evt) {
-    if (evt.target.classList.contains('map__pin--clone')) {
-      window.backend.load('https://js.dump.academy/keksobooking/data', onRequestCard, window.showError);
+  // pinsPlace.addEventListener('click', function (evt) {
+  //   if (evt.target.classList.contains('map__pin--clone') || evt.target.classList.contains('map__pin-img--clone')) {
+  //     window.backend.load('https://js.dump.academy/keksobooking/data', onRequestCard, window.showError);
+  //   }
+  // });
+
+  mapFilters.addEventListener('change', function () {
+    var all = pinsPlace.querySelectorAll('.map__pin--clone');
+    for (var i = 0; i < all.length; i++) {
+      all[i].remove();
     }
+
+    window.onSuccess();
   });
+
 })();
