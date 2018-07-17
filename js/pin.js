@@ -9,7 +9,7 @@
     img.src = arr.author.avatar;
     img.textContent = arr.offer.title;
     pinClone.classList.add('map__pin--clone');
-    img.classList.add('map__pin--clone');
+    img.classList.add('map__pin-img--clone');
     return pinClone;
   };
 })();
