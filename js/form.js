@@ -12,20 +12,25 @@
   var form = document.querySelector('.ad-form');
   var reset = document.querySelector('.ad-form__reset');
   var success = document.querySelector('.success');
-  var dependencePrice = {
+  var typeSelect = document.querySelector('#housing-type');
+  var priceSelect = document.querySelector('#housing-price');
+  var roomSelect = document.querySelector('#housing-rooms');
+  var guestSelect = document.querySelector('#housing-guests');
+  var featureSelect = document.querySelector('#housing-features');
+  var typeToPrice = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
-  var dependenceGuests = {
+  var roomToGuest = {
     1: [3],
     2: [2, 3],
     3: [1, 2, 3],
     100: [4]
   };
 
-  var testedValue = function (select, value) {
+  var testValue = function (select, value) {
     var options = select.options;
     for (var i = 0; i < options.length; i++) {
       if (options[i].value === value) {
@@ -38,19 +43,19 @@
   // ----------------- Зависимость цены от типа жилья -----------------
   housingTypeSelect.addEventListener('click', function () {
     var selected = housingTypeSelect.options[housingTypeSelect.selectedIndex].value;
-    price.min = dependencePrice[selected];
-    price.placeholder = dependencePrice[selected];
+    price.min = typeToPrice[selected];
+    price.placeholder = typeToPrice[selected];
   });
 
   // ----------------- Время заезда и выезда - зависимость --------------
   timeIn.addEventListener('click', function () {
     var selectedTime = timeIn.options[timeIn.selectedIndex].value;
-    timeOut.options[testedValue(timeOut, selectedTime)].selected = true;
+    timeOut.options[testValue(timeOut, selectedTime)].selected = true;
   });
 
   timeOut.addEventListener('click', function () {
     var selectedTime = timeOut.options[timeOut.selectedIndex].value;
-    timeIn.options[testedValue(timeIn, selectedTime)].selected = true;
+    timeIn.options[testValue(timeIn, selectedTime)].selected = true;
   });
 
   // ----------------- Зависимость кол-ва гостей от кол-ва комнат -------
@@ -61,7 +66,7 @@
       guests.options[i].disabled = true;
     }
     guests.setCustomValidity('');
-    var selectedValues = dependenceGuests[selectedRoom];
+    var selectedValues = roomToGuest[selectedRoom];
     for (var j = 0; j < selectedValues.length; j++) {
       var k = selectedValues[j];
       guests.options[k].disabled = false;
@@ -85,10 +90,10 @@
 
   // --------- Сброс формы на дефолтные значения при удачной
   //  отправке формы --------------------
-  var closeSuccess = function (evtDown) {
+  var closeOnSuccess = function (evtDown) {
     window.util.isEscEvent(evtDown, function () {
       success.classList.add('hidden');
-      document.removeEventListener('keydown', closeSuccess);
+      document.removeEventListener('keydown', closeOnSuccess);
     });
   };
 
@@ -108,8 +113,17 @@
       guests.options[0].selected = true;
       roomNumber.options[0].disabled = true;
       guests.options[0].disabled = true;
+      typeSelect.options[0].selected = true;
+      priceSelect.options[0].selected = true;
+      roomSelect.options[0].selected = true;
+      guestSelect.options[0].selected = true;
 
-      document.addEventListener('keydown', closeSuccess);
+      var selectedFeatures = featureSelect.querySelectorAll('input[type = checkbox]:checked');
+      selectedFeatures.forEach(function (it) {
+        it.checked = false;
+      });
+
+      document.addEventListener('keydown', closeOnSuccess);
     }, window.showError);
     evt.preventDefault();
   });

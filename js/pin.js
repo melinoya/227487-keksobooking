@@ -2,6 +2,8 @@
 
 (function () {
   var pin = document.querySelector('.map__pin');
+
+  // ----- Создание метки на карте (шаблон) -------
   window.createPin = function (arr) {
     var pinClone = pin.cloneNode(true);
     pinClone.style = 'left: ' + (arr.location.x - 25) + 'px; top: ' + (arr.location.y - 70) + 'px;';

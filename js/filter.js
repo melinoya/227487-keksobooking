@@ -5,16 +5,18 @@
     MIN: 10000,
     MAX: 50000
   };
-
   var type = document.querySelector('#housing-type');
   var price = document.querySelector('#housing-price');
   var room = document.querySelector('#housing-rooms');
   var guest = document.querySelector('#housing-guests');
   var feature = document.querySelector('#housing-features');
-  var featureFilters = feature.querySelectorAll('input[type = checkbox]:checked');
   var pinsData = [];
 
   var updatePins = function (arr) {
+    if (document.querySelector('.map__card')) {
+      document.querySelector('.map__card').remove();
+    }
+
     pinsData = arr.slice();
 
     if (type.options[type.selectedIndex].value !== 'any') {
@@ -50,6 +52,7 @@
       });
     }
 
+    var featureFilters = feature.querySelectorAll('input[type = checkbox]:checked');
     if (featureFilters.length !== 0) {
       featureFilters.forEach(function (item) {
         pinsData = pinsData.filter(function (pin) {
