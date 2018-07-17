@@ -12,9 +12,12 @@
     var cardHere = map.querySelector('.map__card');
     if (map.querySelectorAll('.map__card').length > 1) {
       cardHere.remove();
+      var pressed = document.querySelector('.map__pin--active');
+      pressed.classList.remove('map__pin--active');
     }
     close.addEventListener('click', function () {
       map.querySelector('.map__card').remove();
+      pressed.classList.remove('map__pin--active');
     });
   };
 })();

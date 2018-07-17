@@ -9,6 +9,7 @@
       var newPin = window.createPin(arr[i]);
       newPin.addEventListener('click', function () {
         window.onRequestCard(arr[i]);
+        newPin.classList.add('map__pin--active');
       });
       fragment.appendChild(newPin);
     }
