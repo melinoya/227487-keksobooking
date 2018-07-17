@@ -1,13 +1,22 @@
 'use strict';
 
 (function () {
-  var PIN_WIDTH = 64;
-  var PIN_HEIGHT = 64;
-  var PIN_TAIL = 20;
-  var MIN_X = 0;
-  var MAX_X = 1135;
-  var MIN_Y = 80;
-  var MAX_Y = 630;
+  var PIN = {
+    WIDTH: 64,
+    HEIGHT: 64,
+    TAIL: 20
+  };
+
+  var MIN = {
+    X: 0,
+    Y: 80
+  };
+
+  var MAX = {
+    X: 1135,
+    Y: 630
+  };
+
   var map = document.querySelector('.map');
   var mapFilters = map.querySelector('.map__filters');
   var mainPin = map.querySelector('.map__pin--main');
@@ -32,7 +41,7 @@
   };
 
   // ----------- Запись координаты метки до нажатия на нее --------
-  calcAddressValue(PIN_HEIGHT / 2);
+  calcAddressValue(PIN.HEIGHT / 2);
 
   // ---- Нажатие на метку для активации карты
   mainPin.addEventListener('click', function () {
@@ -40,8 +49,6 @@
 
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-
-
   });
 
   // ---- Взаимодействие с меткой на карте после нажатия на нее ---------
@@ -50,12 +57,12 @@
 
     //  ----- Запись стартовых координат метки ------
     var startCoord = {
-      x: parseInt(mainPin.style.left, 10) + (PIN_WIDTH / 2),
-      y: parseInt(mainPin.style.top, 10) + (PIN_HEIGHT / 2)
+      x: parseInt(mainPin.style.left, 10) + (PIN.WIDTH / 2),
+      y: parseInt(mainPin.style.top, 10) + (PIN.HEIGHT / 2)
     };
 
     // ---- Запись координат метки в input с учетом ее хвоста ----
-    calcAddressValue(PIN_HEIGHT + PIN_TAIL);
+    calcAddressValue(PIN.HEIGHT + PIN.TAIL);
 
     // --- Функция при перемещении метки -----
     var onMouseMove = function (evtMove) {
@@ -77,20 +84,19 @@
       mainPin.style.left = parseInt(mainPin.style.left, 10) - shift.x + 'px';
       mainPin.style.top = parseInt(mainPin.style.top, 10) - shift.y + 'px';
 
-      calcAddressValue(PIN_HEIGHT + PIN_TAIL);
+      calcAddressValue(PIN.HEIGHT + PIN.TAIL);
 
       // ----- Установка границ для метки -----
 
-      mainPin.style.left = setBorders(MIN_X, MAX_X, parseInt(mainPin.style.left, 10));
-
-      mainPin.style.top = setBorders(MIN_Y, MAX_Y, parseInt(mainPin.style.top, 10));
+      mainPin.style.left = setBorders(MIN.X, MAX.X, parseInt(mainPin.style.left, 10));
+      mainPin.style.top = setBorders(MIN.Y, MAX.Y, parseInt(mainPin.style.top, 10));
     };
 
     // ----- События, при отпускании клавиши мыши -----
     var onMouseUp = function (evtUp) {
       evtUp.preventDefault();
 
-      calcAddressValue(PIN_HEIGHT + PIN_TAIL);
+      calcAddressValue(PIN.HEIGHT + PIN.TAIL);
 
       // ----- Удаление отслеживателей событий -----
       document.removeEventListener('mousemove', onMouseMove);
@@ -102,16 +108,7 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  // ---- Создание карточки с описанием -----
-
-
-  // ----- Вызов карточки с описанием при нажатии на метку ------
-  // pinsPlace.addEventListener('click', function (evt) {
-  //   if (evt.target.classList.contains('map__pin--clone') || evt.target.classList.contains('map__pin-img--clone')) {
-  //     window.backend.load('https://js.dump.academy/keksobooking/data', onRequestCard, window.showError);
-  //   }
-  // });
-
+  // ------- Вызов применения фильтров на странице ----------
   mapFilters.addEventListener('change', function () {
     var all = pinsPlace.querySelectorAll('.map__pin--clone');
     for (var i = 0; i < all.length; i++) {
@@ -120,5 +117,4 @@
 
     window.onSuccess();
   });
-
 })();
