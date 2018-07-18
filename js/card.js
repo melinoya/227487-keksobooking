@@ -3,6 +3,7 @@
 (function () {
   var template = document.querySelector('template');
   var card = template.content.querySelector('.map__card');
+
   var fragment = document.createDocumentFragment();
   var translation = {
     'flat': 'Квартира',
@@ -13,6 +14,7 @@
 
   window.fillPin = function (arr) {
     var cardCopy = card.cloneNode(true);
+    var photos = cardCopy.querySelector('.popup__photos');
     cardCopy.querySelector('.popup__title').textContent = arr.offer.title;
     cardCopy.querySelector('.popup__text--address').textContent = arr.offer.address;
     cardCopy.querySelector('.popup__text--price').textContent = '' + arr.offer.price + '₽/ночь';
@@ -28,10 +30,10 @@
       copyImg.src = arr.offer.photos[i];
 
       fragment.appendChild(copyImg);
-      cardCopy.querySelector('.popup__photos').appendChild(fragment);
+      photos.appendChild(fragment);
     }
     var imgDelete = cardCopy.querySelector('.popup__photo');
-    cardCopy.querySelector('.popup__photos').removeChild(imgDelete);
+    photos.removeChild(imgDelete);
     cardCopy.querySelector('.popup__avatar').src = arr.author.avatar;
     return cardCopy;
   };

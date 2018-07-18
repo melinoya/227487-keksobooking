@@ -66,10 +66,13 @@
       guests.options[i].disabled = true;
     }
     guests.setCustomValidity('');
-    var selectedValues = roomToGuest[selectedRoom];
-    for (var j = 0; j < selectedValues.length; j++) {
-      var k = selectedValues[j];
-      guests.options[k].disabled = false;
+
+    if (roomToGuest[selectedRoom]) {
+      var selectedValues = roomToGuest[selectedRoom];
+      for (var j = 0; j < selectedValues.length; j++) {
+        var k = selectedValues[j];
+        guests.options[k].disabled = false;
+      }
     }
   });
 
