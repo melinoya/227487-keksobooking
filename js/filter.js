@@ -13,8 +13,9 @@
   var pinsData = [];
 
   var updatePins = function (arr) {
-    if (document.querySelector('.map__card')) {
-      document.querySelector('.map__card').remove();
+    var pinInfo = document.querySelector('.map__card');
+    if (pinInfo) {
+      pinInfo.remove();
     }
 
     pinsData = arr.slice();

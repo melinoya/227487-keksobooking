@@ -71,13 +71,13 @@
       // --- На сколько метка переместилась ----
       var shift = {
         x: startCoord.x - (evtMove.clientX - map.offsetLeft),
-        y: startCoord.y - evtMove.clientY
+        y: startCoord.y - evtMove.pageY
       };
 
       // --- Замена стартовых координат на новые
       startCoord = {
         x: evtMove.clientX - map.offsetLeft,
-        y: evtMove.clientY
+        y: evtMove.pageY
       };
 
       // ---- Новые координаты задаются метке через вычитание сдвига метки ---
