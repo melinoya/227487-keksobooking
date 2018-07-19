@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-  var pin = document.querySelector('.map__pin');
+  var template = document.querySelector('template');
+  var pin = template.content.querySelector('.map__pin');
 
   // ----- Создание метки на карте (шаблон) -------
   window.createPin = function (arr) {

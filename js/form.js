@@ -9,13 +9,12 @@
   var timeOut = document.querySelector('#timeout');
   var roomNumber = document.querySelector('#room_number');
   var guests = document.querySelector('#capacity');
+  var guestsOptions = guests.querySelectorAll('option');
   var form = document.querySelector('.ad-form');
   var reset = document.querySelector('.ad-form__reset');
   var success = document.querySelector('.success');
-  var typeSelect = document.querySelector('#housing-type');
-  var priceSelect = document.querySelector('#housing-price');
-  var roomSelect = document.querySelector('#housing-rooms');
-  var guestSelect = document.querySelector('#housing-guests');
+  var formFilter = document.querySelector('.map__filters');
+  var allSelects = formFilter.querySelectorAll('select');
   var featureSelect = document.querySelector('#housing-features');
   var typeToPrice = {
     'bungalo': 0,
@@ -40,6 +39,13 @@
     return i;
   };
 
+  // ----- Сброс всех select при отправке/ресета формы
+  var resetSelect = function (arr) {
+    arr.forEach(function (it) {
+      it.options[0].selected = true;
+    });
+  };
+
   // ----------------- Зависимость цены от типа жилья -----------------
   housingTypeSelect.addEventListener('click', function () {
     var selected = housingTypeSelect.options[housingTypeSelect.selectedIndex].value;
@@ -62,7 +68,7 @@
   guests.setCustomValidity('Введено неверное количество гостей');
   roomNumber.addEventListener('click', function () {
     var selectedRoom = roomNumber.options[roomNumber.selectedIndex].value;
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < guestsOptions.length; i++) {
       guests.options[i].disabled = true;
     }
     guests.setCustomValidity('');
@@ -85,8 +91,15 @@
     map.classList.add('map--faded');
 
     if (map.querySelector('.map__card')) {
-      map.querySelector('.map__card');
+      map.querySelector('.map__card').remove();
     }
+
+    resetSelect(allSelects);
+
+    var selectedFeatures = featureSelect.querySelectorAll('input[type = checkbox]:checked');
+    selectedFeatures.forEach(function (it) {
+      it.checked = false;
+    });
   };
 
   reset.addEventListener('click', resetAll);
@@ -100,31 +113,28 @@
     });
   };
 
+  var makeSelected = function (element) {
+    element.options[0].disabled = false;
+    element.options[0].selected = true;
+    element.options[0].disabled = true;
+  };
+
   form.addEventListener('submit', function (evt) {
     window.backend.save('https://js.dump.academy/keksobooking', new FormData(form), function () {
       success.classList.remove('hidden');
       resetAll();
-      form.querySelector('#title').value = '';
-      form.querySelector('#price').value = '';
-      form.querySelector('#description').value = '';
-      housingTypeSelect.options[0].selected = true;
-      timeOut.options[0].selected = true;
-      timeIn.options[0].selected = true;
-      roomNumber.options[0].disabled = false;
-      guests.options[0].disabled = false;
-      roomNumber.options[0].selected = true;
-      guests.options[0].selected = true;
-      roomNumber.options[0].disabled = true;
-      guests.options[0].disabled = true;
-      typeSelect.options[0].selected = true;
-      priceSelect.options[0].selected = true;
-      roomSelect.options[0].selected = true;
-      guestSelect.options[0].selected = true;
 
-      var selectedFeatures = featureSelect.querySelectorAll('input[type = checkbox]:checked');
-      selectedFeatures.forEach(function (it) {
-        it.checked = false;
+      var inputs = form.querySelectorAll('input');
+      inputs.forEach(function (it) {
+        it.value = '';
       });
+
+      var adSelects = form.querySelectorAll('select');
+      resetSelect(adSelects);
+
+      form.querySelector('#description').value = '';
+      makeSelected(roomNumber);
+      makeSelected(guests);
 
       document.addEventListener('keydown', closeOnSuccess);
     }, window.showError);
