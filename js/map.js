@@ -24,13 +24,15 @@
   var addressInput = document.querySelector('#address');
   var pinsPlace = document.querySelector('.map__pins');
 
-
   // ---- Установка границ на карте для метки --------
   var setBorders = function (min, max, current) {
     if (current < min) {
       var value = min + 'px';
-    } else if (current > max) {
+      return value;
+    }
+    if (current > max) {
       value = max + 'px';
+      return value;
     }
     return value;
   };
@@ -45,7 +47,9 @@
 
   // ---- Нажатие на метку для активации карты
   mainPin.addEventListener('click', function () {
-    window.backend.load('https://js.dump.academy/keksobooking/data', window.makePins, window.showError);
+    if (!pinsPlace.querySelector('.map__pin--clone')) {
+      window.backend.load('https://js.dump.academy/keksobooking/data', window.makePins, window.showError);
+    }
 
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
@@ -111,10 +115,11 @@
   // ------- Вызов применения фильтров на странице ----------
   mapFilters.addEventListener('change', function () {
     var all = pinsPlace.querySelectorAll('.map__pin--clone');
+
     for (var i = 0; i < all.length; i++) {
       all[i].remove();
     }
 
-    window.onSuccess();
+    window.updatePins(window.pinsFromServer);
   });
 })();
