@@ -24,14 +24,15 @@
     cardCopy.querySelector('.popup__features').textContent = arr.offer.features;
     cardCopy.querySelector('.popup__description').textContent = arr.offer.description;
 
-    for (var i = 0; i < arr.offer.photos.length; i++) {
-      var imgHousing = card.querySelector('.popup__photo');
-      var copyImg = imgHousing.cloneNode();
-      copyImg.src = arr.offer.photos[i];
+    var imgHousing = card.querySelector('.popup__photo');
 
+    arr.offer.photos.forEach(function (it) {
+      var copyImg = imgHousing.cloneNode();
+      copyImg.src = it;
       fragment.appendChild(copyImg);
-      photos.appendChild(fragment);
-    }
+    });
+
+    photos.appendChild(fragment);
     var imgDelete = cardCopy.querySelector('.popup__photo');
     photos.removeChild(imgDelete);
     cardCopy.querySelector('.popup__avatar').src = arr.author.avatar;
